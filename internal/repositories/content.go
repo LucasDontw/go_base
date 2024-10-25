@@ -1,4 +1,4 @@
-package dao
+package repositories
 
 import (
 	"cms/v2/internal/model"
@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type ContentDao struct {
+type ContentRepo struct {
 	db *gorm.DB
 }
 
@@ -18,11 +18,11 @@ type FindParams struct {
 	PageSize int
 }
 
-func NewContentDao(db *gorm.DB) *ContentDao {
-	return &ContentDao{db: db}
+func NewContentRepo(db *gorm.DB) *ContentRepo {
+	return &ContentRepo{db: db}
 }
 
-func (c *ContentDao) Get(params *FindParams) ([]*model.ContentDetail, int64, error) {
+func (c *ContentRepo) Get(params *FindParams) ([]*model.ContentDetail, int64, error) {
 	query := c.db.Model(&model.ContentDetail{})
 
 	if params.ID != 0 {
@@ -63,7 +63,7 @@ func (c *ContentDao) Get(params *FindParams) ([]*model.ContentDetail, int64, err
 	return data, total, nil
 }
 
-func (c *ContentDao) Create(detail model.ContentDetail) error {
+func (c *ContentRepo) Create(detail model.ContentDetail) error {
 	if err := c.db.Create(&detail).Error; err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func (c *ContentDao) Create(detail model.ContentDetail) error {
 	return nil
 }
 
-func (c *ContentDao) Update(id int, detail model.ContentDetail) error {
+func (c *ContentRepo) Update(id int, detail model.ContentDetail) error {
 	if err := c.db.Where("id = ?", id).Updates(&detail).Error; err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ func (c *ContentDao) Update(id int, detail model.ContentDetail) error {
 	return nil
 }
 
-func (c *ContentDao) Delete(id int) error {
+func (c *ContentRepo) Delete(id int) error {
 	if err := c.db.Where("id = ?", id).Delete(&model.ContentDetail{}).Error; err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func (c *ContentDao) Delete(id int) error {
 	return nil
 }
 
-func (c *ContentDao) IsExist(ID int) (bool, error) {
+func (c *ContentRepo) IsExist(ID int) (bool, error) {
 	err := c.db.Where("id=?", ID).First(&model.ContentDetail{}).Error
 
 	if err == gorm.ErrRecordNotFound {

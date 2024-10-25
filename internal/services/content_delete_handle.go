@@ -1,7 +1,7 @@
 package services
 
 import (
-	"cms/v2/internal/dao"
+	"cms/v2/internal/repositories"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,8 +23,8 @@ func (c *CmsApp) ContentDelete(ctx *gin.Context) {
 		return
 	}
 
-	contentDao := dao.NewContentDao(c.db)
-	ok, err := contentDao.IsExist(req.ID)
+	contentRepo := repositories.NewContentRepo(c.db)
+	ok, err := contentRepo.IsExist(req.ID)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -36,7 +36,7 @@ func (c *CmsApp) ContentDelete(ctx *gin.Context) {
 		return
 	}
 
-	if err := contentDao.Delete(req.ID); err != nil {
+	if err := contentRepo.Delete(req.ID); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "刪除失敗"})
 
 		return

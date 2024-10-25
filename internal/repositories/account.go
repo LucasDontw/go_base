@@ -1,4 +1,4 @@
-package dao
+package repositories
 
 import (
 	"cms/v2/internal/model"
@@ -6,15 +6,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type AccountDao struct {
+type AccountRepo struct {
 	db *gorm.DB
 }
 
-func NewAccountDao(db *gorm.DB) *AccountDao {
-	return &AccountDao{db: db}
+func NewAccountRepo(db *gorm.DB) *AccountRepo {
+	return &AccountRepo{db: db}
 }
 
-func (a *AccountDao) IsExist(userID string) (bool, error) {
+func (a *AccountRepo) IsExist(userID string) (bool, error) {
 	var account model.Account
 	err := a.db.Where("user_id=?", userID).First(&account).Error
 
@@ -29,7 +29,7 @@ func (a *AccountDao) IsExist(userID string) (bool, error) {
 	return true, nil
 }
 
-func (a *AccountDao) Create(account model.Account) error {
+func (a *AccountRepo) Create(account model.Account) error {
 	if err := a.db.Create(&account).Error; err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (a *AccountDao) Create(account model.Account) error {
 	return nil
 }
 
-func (a *AccountDao) FirstByUserID(userID string) (*model.Account, error) {
+func (a *AccountRepo) FirstByUserID(userID string) (*model.Account, error) {
 	var account model.Account
 	err := a.db.Where("user_id=?", userID).First(&account).Error
 

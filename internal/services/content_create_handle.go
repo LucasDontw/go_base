@@ -1,8 +1,8 @@
 package services
 
 import (
-	"cms/v2/internal/dao"
 	"cms/v2/internal/model"
+	"cms/v2/internal/repositories"
 	"net/http"
 	"time"
 
@@ -38,10 +38,10 @@ func (c *CmsApp) ContentCreate(ctx *gin.Context) {
 		return
 	}
 
-	contentDao := dao.NewContentDao(c.db)
+	contentRepo := repositories.NewContentRepo(c.db)
 
 	now := time.Now()
-	if err := contentDao.Create(model.ContentDetail{
+	if err := contentRepo.Create(model.ContentDetail{
 		Title:          req.Title,
 		Description:    req.Description,
 		Author:         req.Author,

@@ -1,8 +1,8 @@
 package services
 
 import (
-	"cms/v2/internal/dao"
 	"cms/v2/internal/model"
+	"cms/v2/internal/repositories"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,9 +30,9 @@ func (c *CmsApp) ContentFind(ctx *gin.Context) {
 		return
 	}
 
-	contentDao := dao.NewContentDao(c.db)
+	contentRepo := repositories.NewContentRepo(c.db)
 
-	contentList, count, err := contentDao.Get(&dao.FindParams{
+	contentList, count, err := contentRepo.Get(&repositories.FindParams{
 		ID:       req.ID,
 		Author:   req.Author,
 		Title:    req.Title,

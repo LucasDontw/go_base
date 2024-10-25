@@ -1,6 +1,7 @@
-package api
+package router
 
 import (
+	"cms/v2/internal/middleware"
 	"cms/v2/internal/services"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,7 @@ const (
 func CmsRouters(r *gin.Engine) {
 	cmsApp := services.NewCmsApp()
 
-	session := NewSessionAuth()
+	session := middleware.NewSessionAuth()
 
 	root := r.Group(rootPath).Use(session.Auth) //api分組
 	{

@@ -1,8 +1,8 @@
 package services
 
 import (
-	"cms/v2/internal/dao"
 	"cms/v2/internal/model"
+	"cms/v2/internal/repositories"
 	"net/http"
 	"time"
 
@@ -39,8 +39,8 @@ func (c *CmsApp) ContentUpdate(ctx *gin.Context) {
 		return
 	}
 
-	contentDao := dao.NewContentDao(c.db)
-	ok, err := contentDao.IsExist(req.ID)
+	contentRepo := repositories.NewContentRepo(c.db)
+	ok, err := contentRepo.IsExist(req.ID)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -53,7 +53,7 @@ func (c *CmsApp) ContentUpdate(ctx *gin.Context) {
 	}
 
 	now := time.Now()
-	if err := contentDao.Update(req.ID, model.ContentDetail{
+	if err := contentRepo.Update(req.ID, model.ContentDetail{
 		Title:          req.Title,
 		Description:    req.Description,
 		Author:         req.Author,

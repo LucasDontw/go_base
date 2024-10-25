@@ -1,4 +1,4 @@
-package api
+package middleware
 
 import (
 	"cms/v2/internal/utils"

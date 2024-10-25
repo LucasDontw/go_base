@@ -1,8 +1,8 @@
 package services
 
 import (
-	"cms/v2/internal/dao"
 	"cms/v2/internal/model"
+	"cms/v2/internal/repositories"
 	"net/http"
 	"time"
 
@@ -36,8 +36,8 @@ func (c *CmsApp) Register(ctx *gin.Context) {
 	}
 
 	//帳號驗證
-	accountDao := dao.NewAccountDao(c.db)
-	isExist, err := accountDao.IsExist(req.UserID)
+	accountRepo := repositories.NewAccountRepo(c.db)
+	isExist, err := accountRepo.IsExist(req.UserID)
 
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -53,7 +53,7 @@ func (c *CmsApp) Register(ctx *gin.Context) {
 
 	//寫入DB
 	now := time.Now()
-	if err := accountDao.Create(model.Account{
+	if err := accountRepo.Create(model.Account{
 		UserID:     req.UserID,
 		Password:   hashPassword,
 		Nickname:   req.Nickname,

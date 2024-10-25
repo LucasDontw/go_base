@@ -1,7 +1,7 @@
 package services
 
 import (
-	"cms/v2/internal/dao"
+	"cms/v2/internal/repositories"
 	"cms/v2/internal/utils"
 	"context"
 	"fmt"
@@ -38,8 +38,8 @@ func (c *CmsApp) Login(ctx *gin.Context) {
 	)
 
 	//取得account
-	accountDao := dao.NewAccountDao(c.db)
-	account, err := accountDao.FirstByUserID(userID)
+	accountRepo := repositories.NewAccountRepo(c.db)
+	account, err := accountRepo.FirstByUserID(userID)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "請輸入正確帳號ID"})
@@ -82,6 +82,7 @@ func (c *CmsApp) generateSessionID(ctx context.Context, userID string) (string, 
 		return "", err
 	}
 
+	// 第二個session主要是用來記錄用戶登入時間，後續像是帳號只可以登入一個等其他功能會用到
 	authKey := utils.GetAuthKey(sessionID)
 	err = c.rdb.Set(ctx, authKey, time.Now().Unix(), time.Hour*8).Err()
 
